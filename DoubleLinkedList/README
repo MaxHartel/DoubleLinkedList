@@ -1,0 +1,228 @@
+****************
+* Double Linked List
+* CS 221
+* 11/19/21
+* Max Hartel
+**************** 
+
+OVERVIEW:
+
+ IUDoubleLinkedList is a Node based implementation of an Indexed Unsorted List,
+Where nodes are linked to both the node in front of them and the node behind them.
+ListTester confirms that IUDoubleLinked List is a valid, fully functional, Indexed
+Unsorted List.
+
+
+INCLUDED FILES:
+
+ IUDoubleLinkedList.java - source file
+ Node.java - source file
+ ListTester.java - source file
+ IndexedUnsortedList.java - source file
+ README - this file
+
+
+COMPILING AND RUNNING:
+ 
+ From the directory containing all source files, compile the
+ driver class (and all dependencies) with the command:
+ $ javac ListTester.java
+
+ Run the compiled class file with the command:
+ $ java ListTester
+
+ Console output will report which tests IUDoubleLinkedList passed or failed.
+
+
+PROGRAM DESIGN AND IMPORTANT CONCEPTS:
+
+ IUDoubleLinkedList implements the IndexedUnsortedList interface,
+Which defines methods for a basic indexed unsorted list for storing elements.
+IUDoubleLinkedList uses node objects that are linked both to the node in front of them
+And the node behind them to accomplish this task. The list can traverse forwards and backwards across these nodes
+Using the links via the Node classes' getPrevious() and getNext() methods. Nodes in this program are represented By 
+the Node class and contain a single element which can be accessed and modified by the list. 
+
+In the program's remove at an index and removeElement methods I call removeFirst() and removeLast() from
+Inside the methods when those cases are needed. I do this to reduce code duplication. I wrote removeFirst
+And removeLast as some of my first methods in this project and my tester class confirmed their functionality,
+So I used them whenever I could in other methods to reduce code duplication and to keep each method as streamlined as possible.
+However when I first tried this implementation there were problems with both the remove method that calls removeLast or removeFirst
+Decrementing the size variable, as well as removeLast or removeFirst decrementing the size variable, which caused it to be inaccurate.
+I solved this by using an if-else statement such that once a call had been made to removeFirst or removeLast then no other code ran in that method.
+
+In my methods where I remove an element at a specified place, wether that be at an index or if it contains a specified element,
+I accomplished this by identifying the node that was before the target node, and then identifying the node that comes after the target node, 
+And then giving those nodes names, which were current and afterDeleted respectively. I then linked these two nodes together, leaving the node that was targeted for
+Deletion hanging off of the list and attached to nothing. The hanging node gets collected by the garbage collector and then no longer exists. I designed it this way
+because that was the best way I could come up with to ensure that the node after the node targeted for removal had its previous link properly reconnected without
+Any errors. 
+
+In some of my methods in this program I use the variable current to represent the node that had been targeted when that method was called, and sometimes 
+I use the variable current to represent the node before the node that had been targeted when the method was called. The reason for this inconsistency is that in some methods,
+Such as addAfter, it is much more beneficial to be working with the node before the node that had been targeted when the method was called, and makes the method much cleaner and easier to write. 
+However current is still a good variable name because it represents the current node that I have emphasis on, so that is why I decided to reuse that name.
+
+This DoubleLinkedList uses much less memory than an an arrayList for most list sizes, but if your primary purpose for this list will be to get elements at specified indices, then it may be beneficial to use the ArrayList implementation of an Indexed unsorted list instead of the double linked list implementation. It would be beneficial because the arrayList version of that method is more efficient with only a runtime of O(1), whereas double linked list' get() method has a runtime of O(n);
+
+ListTester confirms correct functionality of all IUDoubleLinkedList methods and ListIterator methods
+For change scenarios involving sets from zero to three elements after changes by add, remove and set methods. 
+It is configured to use the IUDoubleLinkedList implementation of IndexedUnsortedList. 
+
+
+TESTING:
+
+ ListTester was the primary mechanism for testing IUDoubleLinkedList. ListTester was
+Written before IUDoubleLinkedList, so test-driven development helped ensure that all 
+IUDoubleLinkedList functionality was being tested from the start. 
+
+Scenarios being tested by ListTester include:
+1) no list -> constructor -> []
+2) [] -> addToFront(A) -> [A]
+3) [] -> addToRear(A) -> [A]
+4) [] -> add(A) -> [A]
+5) [] -> add(0,A) -> [A]
+6) [A] -> addToFront(B) -> [B,A]
+7) [A] -> addToRear(B) -> [A,B]
+8) [A] -> addAfter(B,A) -> [A,B]
+9) [A] -> add(B) -> [A,B]
+10) [A] -> add(0,B) -> [B,A]
+11) [A] -> add(1,B) -> [A,B]
+12) [A] -> removeFirst() -> []
+13) [A] -> removeLast() -> []
+14) [A] -> remove(A) -> []
+15) [A] -> remove(0) -> []
+16) [A] -> set(0,B) -> [B]
+17) [A,B] -> addToFront(C) -> [C,A,B]
+18) [A,B] -> addToRear(C) -> [A,B,C]
+19) [A,B] -> addAfter(C,A) -> [A,C,B]
+20) [A,B] -> addAfter(C,B) -> [A,B,C]
+21) [A,B] -> add(C) -> [A,B,C]
+22) [A,B] -> add(0,C) -> [C,A,B]
+23) [A,B] -> add(1,C) -> [A,C,B]
+24) [A,B] -> add (2,C) -> [A,B,C]
+25) [A,B] -> removeFirst() -> [B]
+26) [A,B] -> removeLast() -> [A]
+27) [A,B] -> remove(A) -> [B]
+28) [A,B] -> remove(B) -> [A]
+29) [A,B] -> remove(0) -> [B]
+30) [A,B] -> remove(1) -> [A]
+31) [A,B] -> set(0,C) -> [C,B]
+32) [A,B] -> set(1,C) -> [A,C]
+33) [A,B,C] -> removeFirst() -> [B,C]
+34) [A,B,C] -> removeLast() -> [A,B]
+35) [A,B,C] -> remove(A) -> [B,C]
+36) [A,B,C] -> remove(B) -> [A,C]
+37) [A,B,C] -> remove(C) -> [A,B]
+38) [A,B,C] -> remove(0) -> [B,C]
+39) [A,B,C] -> remove(1) -> [A,C]
+40) [A,B,C] -> remove(2) -> [A,B]
+41) [A,B,C] -> set(0,D) -> [D,B,C]
+42) [A,B,C] -> set(1,D) -> [A,D,C]
+43) [A,B,C] -> set(2,D) -> [A,B,D]
+44) [A] -> iterator remove() after next() returns A -> []
+45) [A,B] -> iterator remove() after next() returns A -> [B]
+46) [A,B] -> iterator remove() after next() returns B -> [A]
+47) [A,B,C] -> iterator remove() after next() returns A -> [B,C]
+48) [A,B,C] -> iterator remove() after next() returns B -> [A,C]
+49) [A,B,C] -> iterator remove() after next() returns C -> [A,B]
+50-55) same as Iterator remove() after next() scenarios above
+56) [A] -> iterator remove() after previous() returns A -> []
+57) [A,B] -> iterator remove() after previous() returns A -> [B]
+58) [A,B] -> iterator remove() after previous() returns B -> [A]
+59) [A,B,C] -> iterator remove() after previous() returns A -> [B,C]
+60) [A,B,C] -> iterator remove() after previous() returns B -> [A,C]
+61) [A,B,C] -> iterator remove() after previous() returns C -> [A,B]
+62) [] -> iterator add(A) -> [A]
+63) [A] -> iterator add(B) with new iterator -> [B,A]
+64) [A] -> iterator add(B) after next() returns A -> [A,B]
+65) [A] -> iterator add(B) after previous() returns A -> [B,A]
+66) [A,B] -> iterator add(C) with new iterator -> [C,A,B]
+67) [A,B] -> iterator add(C) after next() returns A -> [A,C,B]
+68) [A,B] -> iterator add(C) after next() returns B -> [A,B,C]
+69) [A,B] -> iterator add(C) after previous() returns A -> [C,A,B]
+70) [A,B] -> iterator add(C) after previous() returns B -> [A,C,B]
+71) [A] -> iterator set(B) after next() returns A -> [B]
+72) [A] -> iterator set(B) after previous() returns A -> [B]
+73) [A,B] -> iterator set(C) after next() returns A -> [C,B]
+74) [A,B] -> iterator set(C) after next() returns B -> [A,C]
+75) [A,B] -> iterator set(C) after previous() returns A -> [C,B]
+76) [A,B] -> iterator set(C) after previous() returns B -> [A,C]
+77) [A,B,C] -> iterator set(D) after next() returns A -> [D,B,C]
+78) [A,B,C] -> iterator set(D) after next() returns B -> [A,D,C]
+79) [A,B,C] -> iterator set(D) after next() returns C -> [A,B,D]
+80) [A,B,C] -> iterator set(D) after previous() returns A -> [D,B,C]
+81) [A,B,C] -> iterator set(D) after previous() returns B -> [A,D,C]
+82) [A,B,C] -> iterator set(D) after previous() returns C -> [A,B,D]
+
+
+
+With over 8000 tests being ran by ListTester on these change scenarios, and IUDoubleLinkedList
+Passing at 100% on those tests, I am reasonably sure that IUDoubleLinkedList is fully functional 
+And behaving as would be expected. 
+
+I was able to make this great amount of scenarios and tests active and able to be used in testing
+Because of the way I developed this testing class over many similar projects that also implemented 
+An IndexedUnsortedList, so I was able to make the tests for those project, and repurpose them to be used to
+Test this list as well. This was greatly beneficial because I already had a deep understanding of how those tests worked
+So I was able to use them with confidence to test this list from the start of development.
+
+With so many tests being run, the way I used the test classes' out put to hunt down bugs was that
+I looked for consistency's between multiple failed tests. If I could find something that multiple failed 
+tests had in common, I could usually narrow my window of search for that bug down to the method or line that 
+was consistently being called in all of the lines that I was failing at the time.
+
+Along with the technique I described above, I also made sure to run my testing class early and often, so I could see 
+new failed tests right when they came up; which made things much easier in the long run because I solved bugs as I went 
+Instead of doing a massive bug hunt at the end of the project.
+
+DISCUSSION:
+ 
+ Development Journal:
+
+Wednesday November 9th:
+Today I started predevelopment on DoubleLinkedList. I went through the slides on listIterators
+And took extensive notes on how they function. The seem to be very useful as a tool, but
+I am worries that they will be hard to write and could be a big challenge for this project.
+I also watched the recorded panopto lectures on canvas about the DoubleLinkedList project 
+And took notes on those as well. Since I feel like I have a good understanding of how a single linked list functions
+I think I will be able to figure out most of the methods in a DoubleLinkedList without too much trouble.
+
+Thursday November 10th:
+Today I started updating my list tester so that it will have all of the new list iterator tests for DoubleLinkedList.
+I was also planning on implementing some of the new change scenarios today but it took a long time to write all of the new 
+List iterator tests so I was not able to get to them. I was slowed down in writing these tests because I am being meticulously careful that 
+I have the correct expected values for every test. In my array list there was a bug in one of my tests because I was not being careful when I
+Wrote them, it was extraordinarily hard to find so I am making sure that I do not do that again.
+
+Tuesday November 15th:
+After a crazy weekend where I was dealing with family issues for a couple days, I have not been able to work on the 
+Project in quite some time. I feel like I have fallen behind in the development of DoubleLinkedList, so I have resolved to 
+Work in the study center today until all of my new change scenarios are implemented. (Scenarios 50-82) After many hours of work I did finally complete 
+The new change scenerios, I spent almost the entire day working on it, but I think Im back on track for this project.
+
+Wednesday November 16th:
+Today my goal was to implement all of the methods that we worked on in class together. But after an hour or so of
+Work I started getting a problem with my iterator remove method. It is throwing many Illegal state exceptions in such 
+a way that only about 25% of my tests are even able to run, let alone pass I have have spent two hours debugging unsuccessfully at this point 
+So I have deemed that the best way to help myself is to go to sleep and look at this in the morning with fresh eyes.
+
+Thursday November 18th:
+I finally fixed my error in my Iterator remove method that has hurting my project so much! I had accidentally switched 
+the order of two lines so that the iterator would try to walk off the end of the list when it wanted to remove
+The last element in the list. My total number of tests has now jumped from 2100, to 8000+, which is a huge improvement. Now I just have to write 
+the rest of the methods before tomorrow at midnight and I will be doing good!
+
+
+Friday November 19th:
+So I pulled an all-nighter last night and finished the rest of the methods that I needed to implement.
+There was a tough bug I had to figure out that stemmed from my addAfter not working correctly. The problem was that so many of my tests use addAfter to build their
+Scenarios, that the error messages were spread far and wide, so It look a long time to track that down. But after I fixed that error my program is finally testing 
+at 100%, so now all I have to do is the README and JAVAdocs. At this point I am feeling confident that I will get this project turned in on time.
+----------------------------------------------------------------------------
+
+All content in a README file is expected to be written in clear English with
+proper grammar, spelling, and punctuation. If you are not a strong writer,
+be sure to get someone else to help you with proofreading. Consider all project
+documentation to be professional writing for your boss and/or potential
+customers.
